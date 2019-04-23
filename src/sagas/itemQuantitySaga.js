@@ -6,17 +6,23 @@ import {
     DECREASE_ITEM_QUANTITY,
     setItemQuantityFetchStatus,
     decreaseItemQuantity,
+    includeItemQuantity,
     FETCHING,
-    FETCHED
+    FETCHED,
+    INCLUDE_ITEM_QUANTITY
 } from './../actions'
 
 import {
-    currentUserSelector
+    currentUserSelector, cartItemsSelector
 } from '../selectors'
 
 export function* handleIncreaseItemQuantity({id}) {
     yield put(setItemQuantityFetchStatus(FETCHING));
     const user = yield select(currentUserSelector);
+    
+    // eslint-disable-next-line 
+    debugger
+
     const response = yield call(fetch,`http://localhost:8081/cart/add/${user.get('id')}/${id}`);
 
     if (response.status !== 200) {
@@ -32,7 +38,23 @@ export function* handleDecreaseItemQuantity({id, local}) {
     }
     yield put(setItemQuantityFetchStatus(FETCHING));
     const user = yield select(currentUserSelector);
-    const response = yield call(fetch,`http://localhost:8081/cart/remove/${user.get('id')}/${id}`);
+    // const quantity = yield select( cartItemsSelector );
+    // quantity.get('quantity')
+    const response = yield call(fetch,`http://localhost:8081/cart/remove/${user.get('id')}/${id}/${ quantity}`);
+    if (response.status !== 200) {
+        console.warn("Received non-200 status:: ", response);
+    }
+    yield put(setItemQuantityFetchStatus(FETCHED));
+}
+
+export function* handleIncludeItemQuantity({id, isIncluded}) {
+    
+    // eslint-disable-next-line 
+    debugger
+
+    yield put(setItemQuantityFetchStatus(FETCHING));
+    const user = yield select(currentUserSelector);
+    const response = yield call(fetch,`http://localhost:8081/cart/update/${user.get('id')}/${id}/${ !isIncluded}`);
     if (response.status !== 200) {
         console.warn("Received non-200 status:: ", response);
     }
@@ -43,6 +65,7 @@ export function* handleDecreaseItemQuantity({id, local}) {
 export function* itemQuantitySaga() {
     yield [
         takeLatest(DECREASE_ITEM_QUANTITY, handleDecreaseItemQuantity),
-        takeLatest(INCREASE_ITEM_QUANTITY, handleIncreaseItemQuantity)
+        takeLatest(INCREASE_ITEM_QUANTITY, handleIncreaseItemQuantity),
+        takeLatest( INCLUDE_ITEM_QUANTITY, handleIncludeItemQuantity )
     ]
 }

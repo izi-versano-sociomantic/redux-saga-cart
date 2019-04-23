@@ -5,6 +5,7 @@ import {
 } from '../actions'
 export const itemQuantityFetchStatus = createReducer(FETCHED, {
     [SET_ITEM_QUANTITY_FETCH_STATUS](state,{status}) {
+        console.log( 'status', status );
         return status;
     }
 });

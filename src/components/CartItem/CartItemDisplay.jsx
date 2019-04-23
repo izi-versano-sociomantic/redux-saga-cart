@@ -2,7 +2,8 @@ import React from 'react'
 import {
     FETCHED
 } from '../../actions'
-export const CartItemDisplay = ({fetched,name,description,price, id, quantity, increaseItemQuantity, decreaseItemQuantity, quantityFetchStatus})=>(
+export const CartItemDisplay = ({fetched,name,description,price, id, quantity, isIncluded, increaseItemQuantity, 
+    decreaseItemQuantity, includeItemQuantity, quantityFetchStatus})=>(
     <div>
         {fetched ?
         <div>
@@ -22,6 +23,13 @@ export const CartItemDisplay = ({fetched,name,description,price, id, quantity, i
                 {description}
             </p>
             <section>
+
+                <input type="checkbox"  checked = { isIncluded }  onClick={() => {
+                    console.log('Product clicked', isIncluded);
+                    includeItemQuantity(id, isIncluded);
+                    // this.props.onProductSelect(id)
+                }} />
+
                 <span className="item-quantity">
                     Quantity: {quantity}
                 </span>

@@ -5,7 +5,8 @@ import {
 
 import {
     increaseItemQuantity,
-    decreaseItemQuantity
+    decreaseItemQuantity,
+    includeItemQuantity
 } from './../../actions'
 
 import {
@@ -19,6 +20,8 @@ const mapStateToProps = (state,{id}) => {
     const detail = details.find(detail=>detail.id === id);
     const price = itemPriceSelector(id)(state);
     const quantityFetchStatus = itemQuantityFetchStatusSelector(state);
+    // eslint-disable-next-line 
+    debugger
     return {
         fetched: detail !== undefined,
         quantityFetchStatus,
@@ -33,6 +36,9 @@ const mapDispatchToProps = (dispatch) => ({
     },
     decreaseItemQuantity(id){
         dispatch(decreaseItemQuantity(id));
+    },
+    includeItemQuantity(id, isIncluded){
+        dispatch(includeItemQuantity(id, isIncluded));
     }
 });
 
